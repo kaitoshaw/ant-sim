@@ -1,4 +1,4 @@
-# Version 4.0 Sharing Knowledge on Food Location
+# Imported Libraries
 
 import tkinter as tk
 import random
@@ -35,19 +35,13 @@ class Ant:
         # Returning to base 
         if self.food == True:
             base_x, base_y = base1.get_location()
-            x_rate = random.uniform(math.pi, 2*math.pi)
-            y_rate = random.uniform(math.pi/2, 3*math.pi/2)
-            dx = self.speed * math.sin(x_rate)
-            dy = self.speed * math.cos(y_rate)
-            if abs((self.x + dx) - base_x) < abs((self.x - dx) - base_x):
-                self.x += dx
-            else:
-                self.x -= dx
 
-            if abs((self.y + dy) - base_y) < abs((self.y - dy) - base_y):
-                self.y += dy
+            dx = self.x - base_x
+            dy = self.y - base_y
+            if abs(dx) > abs(dy):
+                self.x += self.speed if dx < 0 else -self.speed
             else:
-                self.y -= dy
+                self.y += self.speed if dy < 0 else -self.speed
 
         else:
             if food1.check_value() > 0:
@@ -57,21 +51,14 @@ class Ant:
 
                 # Chemosense Area
                 if abs(food_x-self.x) <= radius and abs(food_y-self.y) <= radius:
-                    # Activate Chemosense
-                    dx = self.speed * math.sin(self.direction)
-                    dy = self.speed * math.cos(self.direction)
 
-                    if abs((self.x + dx) - food_x) < abs((self.x - dx) - food_x):
-                        self.x += dx
+                    # # Activate Chemosense
+                    dx = self.x - food_x
+                    dy = self.y - food_y
+                    if abs(dx) > abs(dy):
+                        self.x += self.speed if dx < 0 else -self.speed
                     else:
-                        self.x -= dx
-
-                    if abs((self.y + dy) - food_y) < abs((self.y - dy) - food_y):
-                        self.y += dy
-                    else:
-                        self.y -= dy
-                    
-                    self.direction += random.uniform(-0.1, 0.1)
+                        self.y += self.speed if dy < 0 else -self.speed
 
                 else:
                     # Food Knowledge starts here
@@ -223,7 +210,7 @@ canvas = tk.Canvas(root, width=c_width, height=c_height)
 canvas.pack()
 
 base1 = AntBase(canvas, 100, 100, 50, 0)
-food1 = FoodSource(canvas, 400, 400, 20)
+food1 = FoodSource(canvas, 400, 400, 100)
 
 ants = []
 for i in range(50):
