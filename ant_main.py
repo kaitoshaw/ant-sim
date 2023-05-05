@@ -87,7 +87,7 @@ class Ant:
                         self.direction += random.uniform(-0.1, 0.1)
 
                 # Food Source
-                if self.x > food1.x-food1.size and self.y > food1.x-food1.size and self.x < food1.x+food1.size and self.y < food1.y+food1.size:
+                if self.x > food1.x-food1.size and self.y > food1.y-food1.size and self.x < food1.x+food1.size and self.y < food1.y+food1.size:
                     if self.food == False:
                         self.food = True
                         self.color = 'red'
@@ -174,7 +174,7 @@ class FoodSource:
     def __init__(self, canvas, x, y, value):
         self.canvas = canvas
         self.x, self.y = x, y
-        self.size = value
+        self.size = value/4
         self.value = value
         self.food = self.canvas.create_oval(
             self.x - self.size, self.y - self.size,
@@ -187,7 +187,7 @@ class FoodSource:
         self.value -= 1
         self.canvas.itemconfig(self.text, text=str(self.value))
         if self.value > 0:
-            self.size -= 1
+            self.size -= 1/4
             self.canvas.coords(self.food, self.x-self.size, self.y-self.size,
                                 self.x+self.size, self.y+self.size)
         if self.value == 0:
@@ -210,7 +210,7 @@ canvas = tk.Canvas(root, width=c_width, height=c_height)
 canvas.pack()
 
 base1 = AntBase(canvas, 100, 100, 20, 0)
-food1 = FoodSource(canvas, 300, 300, 100)
+food1 = FoodSource(canvas, 400, 400, 100)
 
 ants = []
 for i in range(50):
