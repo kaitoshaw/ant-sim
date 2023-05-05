@@ -87,7 +87,7 @@ class Ant:
                         self.direction += random.uniform(-0.1, 0.1)
 
                 # Food Source
-                if self.x > 380 and self.y > 380 and self.x < 420 and self.y < 420:
+                if self.x > food1.x-food1.size and self.y > food1.x-food1.size and self.x < food1.x+food1.size and self.y < food1.y+food1.size:
                     if self.food == False:
                         self.food = True
                         self.color = 'red'
@@ -127,7 +127,7 @@ class Ant:
             self.y = c_height 
             
         # Base
-        elif self.x > 50 and self.x < 150 and self.y > 50 and self.y < 150:
+        elif self.x > base1.x-base1.size and self.x < base1.x+base1.size and self.y > base1.y-base1.size and self.y < base1.y+base1.size:
             if self.food == True:
                 base1.update_value()
                 self.food = False
@@ -209,8 +209,8 @@ root = tk.Tk()
 canvas = tk.Canvas(root, width=c_width, height=c_height)
 canvas.pack()
 
-base1 = AntBase(canvas, 100, 100, 50, 0)
-food1 = FoodSource(canvas, 400, 400, 100)
+base1 = AntBase(canvas, 100, 100, 20, 0)
+food1 = FoodSource(canvas, 300, 300, 100)
 
 ants = []
 for i in range(50):
