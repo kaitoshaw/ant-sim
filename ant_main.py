@@ -200,6 +200,16 @@ class FoodSource:
     def check_location(self):
         return self.x, self.y
         
+class Obstacle:
+    def __init__(self, canvas):
+        self.canvas = canvas
+        self.x1, self.y1, self.x2, self.y2 = random.randint(100, 400), random.randint(100, 400), random.randint(100, 400), random.randint(100, 400)
+        canvas.create_line(self.x1, self.y1, self.x2, self.y2, width=5, fill='green')
+        canvas.pack()
+
+    def get_location(self):
+        return self.x1, self.y1, self.x2, self.y2
+
 # Canvas 
 c_width = 500
 c_height = 500
@@ -211,6 +221,7 @@ canvas.pack()
 
 base1 = AntBase(canvas, 100, 100, 20, 0)
 food1 = FoodSource(canvas, 400, 400, 100)
+line1 = Obstacle(canvas)
 
 ants = []
 for i in range(50):
