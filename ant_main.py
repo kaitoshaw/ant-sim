@@ -48,9 +48,20 @@ class Ant:
                 # Chemosense
                 radius = 50
                 food_x, food_y = food1.check_location()
+                obs_x, obs_y, obs_size = obs1.get_stats()
+
+                # Obstacle Checking
+                if self.x > obs_x-obs_size and self.x < obs_x+obs_size and self.y > obs_y-obs_size and self.y < obs_y+obs_size:
+                    print('hi')
+                    dx = self.speed * math.cos(self.direction)
+                    dy = self.speed * math.sin(self.direction)
+                    self.x += dx
+                    self.y += dy
+                    self.color = 'yellow'
+                    self.direction += random.uniform(-0.1, 0.1)
 
                 # Chemosense Area
-                if abs(food_x-self.x) <= radius and abs(food_y-self.y) <= radius:
+                elif abs(food_x-self.x) <= radius and abs(food_y-self.y) <= radius:
 
                     # # Activate Chemosense
                     dx = self.x - food_x
@@ -108,7 +119,6 @@ class Ant:
                 pass
             else:
                 if abs(k.get_position()[0]-self.x) < 20 and abs(k.get_position()[1]-self.y) < 20 and self.knowFood == True and k.food == False:
-                    # k.color = 'yellow'
                     k.knowFood = True
                     k.food_coordinate = self.food_coordinate
 
@@ -125,7 +135,6 @@ class Ant:
         elif self.y > c_height:
             self.direction = random.uniform(math.pi, 2*math.pi)
             self.y = c_height 
-            
         # Base
         elif self.x > base1.x-base1.size and self.x < base1.x+base1.size and self.y > base1.y-base1.size and self.y < base1.y+base1.size:
             if self.food == True:
@@ -201,14 +210,19 @@ class FoodSource:
         return self.x, self.y
         
 class Obstacle:
-    def __init__(self, canvas):
+    def __init__(self, canvas, x, y, size):
         self.canvas = canvas
-        self.x1, self.y1, self.x2, self.y2 = random.randint(100, 400), random.randint(100, 400), random.randint(100, 400), random.randint(100, 400)
-        canvas.create_line(self.x1, self.y1, self.x2, self.y2, width=5, fill='green')
-        canvas.pack()
+        self.x, self.y = x, y
+        self.size = size
+        
+        self.antBase = self.canvas.create_rectangle(
+            self.x - self.size, self.y - self.size,
+            self.x + self.size, self.y + self.size,
+            fill='white'
+        )
 
-    def get_location(self):
-        return self.x1, self.y1, self.x2, self.y2
+    def get_stats(self):
+        return self.x, self.y, self.size
 
 # Canvas 
 c_width = 500
@@ -221,7 +235,13 @@ canvas.pack()
 
 base1 = AntBase(canvas, 100, 100, 20, 0)
 food1 = FoodSource(canvas, 400, 400, 100)
-line1 = Obstacle(canvas)
+
+obs1 = Obstacle(canvas, random.randint(100, 400), random.randint(100, 400), 20)
+
+# obstacles = []
+# for ___ in range(3):
+#     obstacle = Obstacle(canvas, random.randint(100, 400), random.randint(100, 400), 20)
+#     obstacles.append(obstacle)
 
 ants = []
 for i in range(50):
