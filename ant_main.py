@@ -4,6 +4,7 @@ import tkinter as tk
 import random
 import math
 import numpy as np
+import json
 
 def find_closest_value(lst, target):
     closest_value = lst[0]
@@ -11,6 +12,21 @@ def find_closest_value(lst, target):
         if abs(value - target) < abs(closest_value - target):
             closest_value = value
     return closest_value
+
+def append_to_json(file_name, key, value):
+    try:
+        with open(file_name, 'r') as json_file:
+            data = json.load(json_file)
+    except FileNotFoundError:
+        data = {}
+
+    if key in data:
+        data[key].append(value)
+    else:
+        data[key] = [value]
+
+    with open(file_name, 'w') as json_file:
+        json.dump(data, json_file)
 
 class Ant:
     def __init__(self, canvas, x, y, size=5, speed=1):
@@ -23,6 +39,9 @@ class Ant:
         self.color = 'black'
         self.knowFood = False
         self.food_coordinate = np.nan, np.nan
+
+        # Ticking
+        self.tick_value = 0
         
         self.ant = self.canvas.create_oval(
             self.x - self.size, self.y - self.size,
@@ -48,20 +67,9 @@ class Ant:
                 # Chemosense
                 radius = 50
                 food_x, food_y = food1.check_location()
-                obs_x, obs_y, obs_size = obs1.get_stats()
-
-                # Obstacle Checking
-                if self.x > obs_x-obs_size and self.x < obs_x+obs_size and self.y > obs_y-obs_size and self.y < obs_y+obs_size:
-                    print('hi')
-                    dx = self.speed * math.cos(self.direction)
-                    dy = self.speed * math.sin(self.direction)
-                    self.x += dx
-                    self.y += dy
-                    self.color = 'yellow'
-                    self.direction += random.uniform(-0.1, 0.1)
 
                 # Chemosense Area
-                elif abs(food_x-self.x) <= radius and abs(food_y-self.y) <= radius:
+                if abs(food_x-self.x) <= radius and abs(food_y-self.y) <= radius:
 
                     # # Activate Chemosense
                     dx = self.x - food_x
@@ -138,6 +146,8 @@ class Ant:
         # Base
         elif self.x > base1.x-base1.size and self.x < base1.x+base1.size and self.y > base1.y-base1.size and self.y < base1.y+base1.size:
             if self.food == True:
+                # print(self.tick_value)
+                append_to_json('data.json', 'intel2_0', self.tick_value)
                 base1.update_value()
                 self.food = False
                 self.color = 'black'
@@ -151,8 +161,9 @@ class Ant:
             self.x - self.size, self.y - self.size,
             self.x + self.size, self.y + self.size
         )
-        
-        self.canvas.after(10, self.ant_brain)
+
+        self.tick_value += 1
+        self.canvas.after(5, self.ant_brain)
     
     def get_position(self):
         return self.x, self.y
@@ -235,13 +246,6 @@ canvas.pack()
 
 base1 = AntBase(canvas, 100, 100, 20, 0)
 food1 = FoodSource(canvas, 400, 400, 100)
-
-obs1 = Obstacle(canvas, random.randint(100, 400), random.randint(100, 400), 20)
-
-# obstacles = []
-# for ___ in range(3):
-#     obstacle = Obstacle(canvas, random.randint(100, 400), random.randint(100, 400), 20)
-#     obstacles.append(obstacle)
 
 ants = []
 for i in range(50):
