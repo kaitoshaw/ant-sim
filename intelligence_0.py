@@ -3,6 +3,22 @@
 import tkinter as tk
 import random
 import math
+import json
+
+def append_to_json(file_name, key, value):
+    try:
+        with open(file_name, 'r') as json_file:
+            data = json.load(json_file)
+    except FileNotFoundError:
+        data = {}
+
+    if key in data:
+        data[key].append(value)
+    else:
+        data[key] = [value]
+
+    with open(file_name, 'w') as json_file:
+        json.dump(data, json_file)
 
 class Ant:
     def __init__(self, canvas, x, y, size=5, speed=1):
@@ -13,6 +29,9 @@ class Ant:
         self.direction = random.uniform(0, 2 * math.pi)
         self.food = False
         self.color = 'black'
+
+        # Ticking
+        self.tick_value = 0
         
         self.ant = self.canvas.create_oval(
             self.x - self.size, self.y - self.size,
@@ -64,6 +83,7 @@ class Ant:
         # Base
         elif self.x > 50 and self.x < 150 and self.y > 50 and self.y < 150:
             if self.food == True:
+                append_to_json('data.json', 'intel0_4', self.tick_value)
                 base1.update_value()
                 self.food = False
                 self.color = 'black'
@@ -72,13 +92,14 @@ class Ant:
 
     def update_position(self):
         self.canvas.itemconfig(self.ant, fill=self.color)
+        self.tick_value += 1
         self.canvas.coords(
             self.ant,
             self.x - self.size, self.y - self.size,
             self.x + self.size, self.y + self.size
         )
         
-        self.canvas.after(10, self.ant_brain)
+        self.canvas.after(5, self.ant_brain)
         
 class AntBase:
     def __init__(self, canvas, x, y, size, value):
