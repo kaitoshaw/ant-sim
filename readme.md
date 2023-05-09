@@ -1,4 +1,4 @@
-# Readme File
+# Ant Simulation Program
 
 In this repository, the files used for the plotting based on the ants intelligence is located in intelligenceLevels folder. Inside the folder, there are three files named after each intelligence level. It will give you the visualisation of how the ants work gather the food back to their base based on their intelligence Level
 
