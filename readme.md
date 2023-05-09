@@ -14,12 +14,12 @@ The intelligence level of the ants are differentiated into three levels: 0, 1, a
 ## Running Program Guide
 
 To run this program, you can install the files in zip or clone the repository. To run the ant simulation, you can run the python files inside intelligenceLevel Folder by running either of these commands.
-`python ../intelligenceLevel/intelligence_0.py`
-`python ../intelligenceLevel/intelligence_1.py`
-`python ../intelligenceLevel/intelligence_2.py`
-
+- `python ../intelligenceLevel/intelligence_0.py`
+- `python ../intelligenceLevel/intelligence_1.py`
+- `python ../intelligenceLevel/intelligence_2.py`
+<br><br>
 ### Other files that may be relevant
-`main.ipynb` is the file that manually stores the versioning of the code inside a jupyter notebook file
-`ant_main.py` is the file to modify the newest code development. 
+- `main.ipynb` is the file that manually stores the versioning of the code inside a jupyter notebook file
+- `ant_main.py` is the file to modify the newest code development. 
 
 **Note: however, I was experiencing a github bug where I lost a week worth of project upon the last commit. So both main.ipynb and ant_main.py are not updated**
